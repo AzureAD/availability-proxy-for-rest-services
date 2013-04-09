@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ServiceConfiguration serviceName="HAProxyCloud" xmlns="http://schemas.microsoft.com/ServiceHosting/2008/10/ServiceConfiguration" osFamily="1" osVersion="*" schemaVersion="2012-05.1.7">
+  <Role name="ReverseProxy">
+    <Instances count="1" />
+    <ConfigurationSettings>
+      <Setting name="Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString" value="UseDevelopmentStorage=true" />
+      <Setting name="Name" value="Somewhere" />
+      <Setting name="Movies.ResourcePresented" value="mymovies.trafficmanager.net" />
+      <Setting name="Movies.StorageAccount" value="mymoviessomewhere" />
+      <Setting name="Movies.PreferedActiveMembers" value="West;East;SanAntonio" />
+      <Setting name="Movies.StorageKey" value="The key for the storage account encrypted with the public key from the cert with the tumbprint below" />
+      <Setting name="Movies.Nodes" value="Chicago=p-chi.cloudapp.net;SanAntonio=p-sat.cloudapp.net;Dublin=p-dub.cloudapp.net;HongKong=p-hkg.cloudapp.net;Singapore=p-sin.cloudapp.net;Amsterdam=p-ams.cloudapp.net;East=p-east.cloudapp.net;West=p-west.cloudapp.net" />
+      <Setting name="Movies.PresentedAccount" value="mymovies" />
+      <Setting name="Movies.PresentedKey" value="The storage key that the service accepts from clients, again encrypted with the public key from the cert with the thumbprint below." />
+      <Setting name="MeshMutualAuthThumbprint" value="Thumbprint of the signing cert for the service" />
+      <Setting name="Realm" value="This is the direct address of the service" />
+      <Setting name="StorageAccountName" value="The storage account used by the service itself, this can be the same or different that the sorage acount managed." />
+      <Setting name="StorageAccountKey" value="The key for the storage account used by the service itself encrypted with the public key from the cert with the tumbprint below" />
+      <Setting name="Services" value="Movies=AzureStorage" />
+    </ConfigurationSettings>
+    <Certificates>
+      <Certificate name="Management" thumbprint="BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB" thumbprintAlgorithm="sha1" />
+      <Certificate name="SSLCert"    thumbprint="AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" thumbprintAlgorithm="sha1" />
+    </Certificates>
+  </Role>
+</ServiceConfiguration>

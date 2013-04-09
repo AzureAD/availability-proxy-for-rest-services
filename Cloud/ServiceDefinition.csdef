@@ -1,0 +1,56 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ServiceDefinition name="HAProxyCloud" xmlns="http://schemas.microsoft.com/ServiceHosting/2008/10/ServiceDefinition" schemaVersion="2012-05.1.7">
+  <WebRole name="ReverseProxy" vmsize="Small" enableNativeCodeExecution="true">
+    <Runtime executionContext="elevated" />
+    <Sites>
+      <Site name="Web">
+        <Bindings>
+          <Binding name="Endpoint1" endpointName="Endpoint1" />
+          <Binding name="Endpoint2" endpointName="Endpoint2" />
+        </Bindings>
+      </Site>
+    </Sites>
+    <Endpoints>
+      <InputEndpoint name="Endpoint1" protocol="http" port="80" />
+      <InputEndpoint name="Endpoint2" protocol="https" port="443" certificate="SSLCert" />
+    </Endpoints>
+    <Imports>
+      <Import moduleName="Diagnostics" />
+    </Imports>
+    <ConfigurationSettings>
+      <Setting name="Name" />
+      <Setting name="Movies.ResourcePresented" />
+      <Setting name="Movies.StorageAccount" />
+      <Setting name="Movies.StorageKey" />
+      <Setting name="Movies.Nodes" />
+      <Setting name="Movies.PreferedActiveMembers" />
+      <Setting name="Movies.PresentedAccount" />
+      <Setting name="Movies.PresentedKey" />
+      <Setting name="MeshMutualAuthThumbprint" />
+      <Setting name="Realm" />
+      <Setting name="StorageAccountName" />
+      <Setting name="StorageAccountKey" />
+      <Setting name="Services" />
+    </ConfigurationSettings>
+    <LocalResources>
+      <LocalStorage cleanOnRoleRecycle="false" name="LocalStorage" sizeInMB="80000" />
+      <LocalStorage name="DriveCache" cleanOnRoleRecycle="false" sizeInMB="80000" />
+    </LocalResources>
+    <Startup>
+      <Task commandLine="ExtendMaxSegment.cmd" executionContext="elevated" />
+      <Task commandLine="RegisterPerfCounters.exe" executionContext="elevated" />
+      <Task commandLine="UnlockIISConfig.cmd" executionContext="elevated" />
+      <Task commandLine="SetRealm.exe" executionContext="elevated">
+        <Environment>
+          <Variable name="RealmEnv">
+            <RoleInstanceValue xpath="/RoleEnvironment/CurrentInstance/ConfigurationSettings/ConfigurationSetting[@name='Realm']/@value" />
+          </Variable>
+        </Environment>
+      </Task>
+    </Startup>
+    <Certificates>
+      <Certificate name="Management" storeLocation="CurrentUser" storeName="My" />
+      <Certificate name="SSLCert" storeLocation="LocalMachine" storeName="My" />
+    </Certificates>
+  </WebRole>
+</ServiceDefinition>
