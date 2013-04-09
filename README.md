@@ -1,2 +1,3 @@
-aad-spectrumhaproxy-for-dotnet
+AAD Availability Proxy for .Net
 ==============================
+
