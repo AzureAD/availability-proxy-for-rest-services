@@ -28,6 +28,7 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using Microsoft.WindowsAzure.ServiceRuntime;
+// Copyright (c) Microsoft Corporation
 using System.Threading;
 using System.Xml.Linq;
 using System.Collections;
