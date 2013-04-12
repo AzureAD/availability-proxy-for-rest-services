@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation
+// Copyright (c) Microsoft Corporation
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;

@@ -37,6 +37,9 @@
   </PropertyGroup>
   <!-- Items for the project -->
   <ItemGroup>
+    <ServiceConfiguration Include="ServiceConfiguration.South.cscfg" />
+    <ServiceConfiguration Include="ServiceConfiguration.West.cscfg" />
+    <ServiceConfiguration Include="ServiceConfiguration.East.cscfg" />
     <ServiceDefinition Include="ServiceDefinition.csdef" />
     <ServiceConfiguration Include="ServiceConfiguration.cscfg" />
   </ItemGroup>
