@@ -1,0 +1,8 @@
+﻿@*Copyright (c) Microsoft Corporation*@
+@{
+    ViewBag.Title = "Service Not Present";
+    string controller = ViewBag.Controller;
+}
+
+<h2>The service specified is not present at this location.</h2>
+Try a different location e.g @Html.ActionLink("Chicago", "Index", controller, "http", "p-chi.cloudapp.net", "", null, null).

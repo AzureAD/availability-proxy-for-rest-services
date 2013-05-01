@@ -1,0 +1,51 @@
+﻿@*Copyright (c) Microsoft Corporation*@
+@model ReverseProxy.SerialilzableWebRequest
+@using System.Text
+
+@{
+    var title = String.Format("{0} {1} {2}", ViewBag.Location, ViewBag.Service, "Log Details");
+    ViewBag.Title = title;
+}
+
+<h2>Details</h2>
+
+<fieldset>
+    <legend>SerialilzableWebRequest</legend>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.Path)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Path)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.Query)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Query)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.Method)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Method)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.ContentType)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.ContentType)
+    </div>
+   <div class="display-label">
+        @Html.DisplayNameFor(model => model.Content)
+    </div>
+    <div class="display-field">
+        @Encoding.UTF8.GetString(Model.Content)
+    </div>
+</fieldset>
+<p>
+    @Html.ActionLink("Back to List", "Index")
+</p>

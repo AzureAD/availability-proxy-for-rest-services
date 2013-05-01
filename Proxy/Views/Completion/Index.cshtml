@@ -1,0 +1,27 @@
+﻿@*Copyright (c) Microsoft Corporation*@
+@model IEnumerable<ReverseProxy.Models.CompletionModel>
+@{
+    var title = String.Format("{0} {1} {2}", ViewBag.Location, ViewBag.Service, "Completions");
+    ViewBag.Title = title;
+}
+<table>
+    <tr>
+        <th>
+            Id
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Message)
+        </th>
+    </tr>
+    @foreach (var item in Model)
+    {
+        <tr style="@(item.Conflict ? "background-color: Red;" : "")">
+            <td>
+                @Html.ActionLink(item.Instance.ToString(), "Details", "Log", new { id = item.Instance }, null)
+            </td>
+            <td>
+                @item.Message
+            </td>
+        </tr>
+    }
+</table>

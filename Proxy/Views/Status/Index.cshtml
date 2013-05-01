@@ -1,0 +1,22 @@
+﻿@*Copyright (c) Microsoft Corporation*@
+@model IEnumerable<ReverseProxy.Models.StatusModel>
+@{
+    var title = String.Format("{0} {1} {2}", ViewBag.Location, ViewBag.Service, "Status");
+    ViewBag.Title = title;
+}
+@section scripts
+{
+    @if (false)
+    {
+        <script src="../../Scripts/jquery-1.6.4-vsdoc.js" type="text/javascript"></script>
+    }
+    <script language="javascript" type="text/javascript">
+        $(function () {
+            setInterval(function () { $("#status").load('@Url.Action("Refresh") #table' , '') }, 1000);
+        });
+
+    </script>
+}
+<div id="status">
+    @Html.Partial("IndexPartial", Model)
+</div>

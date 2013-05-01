@@ -1,0 +1,31 @@
+﻿@*Copyright (c) Microsoft Corporation*@
+@model ReverseProxy.Models.LiveLogModel
+@{
+    var title = String.Format("{0} {1} {2}", ViewBag.Location, ViewBag.Service, "Log");
+    ViewBag.Title = title;
+}
+@section scripts
+{
+    @Scripts.Render("~/Scripts/jquery.signalR-0.5.2.js")
+    @Scripts.Render("~/signalr/hubs")
+    <script language="javascript" type="text/javascript">
+        $(function () {
+            var log = $.connection.log;
+
+            log.addMessage = function (instance, message) {
+                $('#messages').prepend('<tr><td>' + instance + '</td><td>' + message + '</td></tr>');
+            }
+
+            $.connection.hub.start().done(function () {
+                log.Join('@Model.Service');            
+            });
+        });
+    </script>
+}
+@*<input type="button" id="add" />*@
+<table >
+    <thead>
+        <tr><th>Id</th><th>Operation</th></tr>
+    </thead>
+    <tbody id='messages' />
+</table>
