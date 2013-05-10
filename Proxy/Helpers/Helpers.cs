@@ -1,4 +1,26 @@
-﻿// Copyright (c) Microsoft Corporation
+//-------------------------------------------------------------------------------------------------
+// <copyright company="Microsoft">
+//     Copyright (c) Microsoft Corporation.  All rights reserved.
+//
+//    Licensed under the Apache License, Version 2.0 (the "License");
+//    you may not use this file except in compliance with the License.
+//    You may obtain a copy of the License at
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+// THIS CODE IS PROVIDED *AS IS* BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, 
+// EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION ANY IMPLIED WARRANTIES OR 
+// CONDITIONS OF TITLE, FITNESS FOR A PARTICULAR PURPOSE, MERCHANTABLITY OR NON-INFRINGEMENT.
+//
+// See the Apache Version 2.0 License for specific language governing 
+// permissions and limitations under the License.
+// </copyright>
+//
+// <summary>
+// 
+//
+//     
+// </summary>
+//-------------------------------------------------------------------------------------------------
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -58,28 +80,11 @@ namespace ReverseProxy
             return cert;
         }
 
-        public static string DecryptString(string encryptedString, X509Certificate2 cert)
-        {
-            var encryptedBytes = Convert.FromBase64String(encryptedString);
-            var clearBytes = ((RSACryptoServiceProvider)cert.PrivateKey).Decrypt(encryptedBytes, false);
-            var clearString = Convert.ToBase64String(clearBytes);
-            return clearString;
-        }
-
-        public static string EncryptString(string clearString, X509Certificate2 cert)
-        {
-            var clearBytes = Convert.FromBase64String(clearString);
-            RSAPKCS1KeyExchangeFormatter keyFormatter = new RSAPKCS1KeyExchangeFormatter((RSACryptoServiceProvider)cert.PublicKey.Key);
-            var encryptedBytes = keyFormatter.CreateKeyExchange(clearBytes);
-            var encryptedString = Convert.ToBase64String(encryptedBytes);
-            return encryptedString;
-        }
 
         public static StorageCredentialsAccountAndKey GetStorageCredentials()
         {
-            var cert = GetCert();
             var account = RoleEnvironment.GetConfigurationSettingValue("StorageAccountName");
-            var key = Utility.DecryptString(RoleEnvironment.GetConfigurationSettingValue("StorageAccountKey"), cert);
+            var key = RoleEnvironment.GetConfigurationSettingValue("StorageAccountKey");
             return new StorageCredentialsAccountAndKey(account, key);
         }
 
