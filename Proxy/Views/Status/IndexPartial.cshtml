@@ -1,0 +1,33 @@
+﻿@*Copyright (c) Microsoft Corporation*@
+@model IEnumerable<ReverseProxy.Models.StatusModel>
+
+
+<head>
+    <meta http-equiv="cache-control" content="no-cache" />
+</head>
+
+<table id="table">
+    <thead>
+        <tr>
+            <th>
+                Locale
+            </th>
+            <th>
+                Time since last communication
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @item.Location.ToString()
+                </td>
+                <td style='background-color:@item.Color;'>
+                    @item.LastContact.ToString()
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

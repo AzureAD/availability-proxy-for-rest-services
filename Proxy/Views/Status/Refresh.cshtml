@@ -1,0 +1,20 @@
+﻿@*Copyright (c) Microsoft Corporation*@
+@model IEnumerable<ReverseProxy.Models.StatusModel>
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Refresh</title>
+</head>
+<body>
+    <div>
+        @Html.Partial("IndexPartial", Model)
+    </div>
+</body>
+</html>

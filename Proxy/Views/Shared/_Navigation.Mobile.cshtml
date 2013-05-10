@@ -1,0 +1,36 @@
+﻿@*Copyright (c) Microsoft Corporation*@
+@{
+    var service = new RouteValueDictionary { { "service", ViewBag.Service } };
+    var attributes = new Dictionary<string, object>();
+    string controller = ViewBag.Controller;
+}
+<div class="float-right">
+    <nav>
+        <ul id="navagation" data-role="listview" data-inset="true">
+            <li data-role="list-divider">Navigation</li>
+            <li>@Html.ActionLink("Status", "Index", "Status", service, null)</li>
+            <li>@Html.ActionLink("Log", "Index", "Log", service, null)</li>
+            <li>@Html.ActionLink("Completions", "Index", "Completion", service, null)</li>
+            @*<li>@Html.ActionLink("OnOff", "Index", "OnOff", service, null)</li>*@
+
+        </ul>
+    </nav>
+    <nav>
+        <ul id="geographies" data-role="listview" data-inset="true">
+            <li data-role="list-divider">Geographies</li>
+            @foreach (var location in ReverseProxy.Helpers.Nodes((string)ViewBag.Service))
+            {
+                <li>@Html.ActionLink(location.Key, "Index", controller, "https", location.Value, "", null, null)</li>
+            }
+        </ul>
+    </nav>
+    <nav>
+        <ul id="services" data-role="listview" data-inset="true">
+            <li data-role="list-divider">Services</li>
+            @foreach (var s in ReverseProxy.Helpers.Services().Keys)
+            {
+                <li>@Html.ActionLink(s, "Index", controller, new { service = s }, null)</li>
+            }
+        </ul>
+    </nav>
+</div>

@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ServiceConfiguration serviceName="HAProxyCloud" xmlns="http://schemas.microsoft.com/ServiceHosting/2008/10/ServiceConfiguration" osFamily="1" osVersion="*" schemaVersion="2012-05.1.7">
+  <Role name="ReverseProxy">
+    <Instances count="1" />
+    <ConfigurationSettings>
+      <Setting name="Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString" value="UseDevelopmentStorage=true" />
+      <Setting name="Name" value="West" />
+      <Setting name="Movies.ResourcePresented" value="mymovies.trafficmanager.net" />
+      <Setting name="Movies.StorageAccount" value="mymovieswest" />
+      <Setting name="Movies.PreferedActiveMembers" value="West;East;South" />
+      <Setting name="Movies.StorageKey" value="The key for the storage account " />
+      <Setting name="Movies.Nodes" value="West=mymovies-west.cloudapp.net;South=mymovies-south.cloudapp.net;East=mymovies-east.cloudapp.net" />
+      <Setting name="Movies.PresentedAccount" value="mymovies" />
+      <Setting name="Movies.PresentedKey" value="The storage key that the service accepts from clients" />
+      <Setting name="Realm" value="https://mymovies-west.cloudapp.net" />
+      <Setting name="StorageAccountName" value="mymovieswest" />
+      <Setting name="StorageAccountKey" value="The key for the storage account used by the service itself " />
+      <Setting name="Services" value="Movies=AzureStorage" />
+      <Setting name="MeshMutualAuthThumbprint" value="Thumbprint of the cert used for mutual authentication between the nodes" />
+    </ConfigurationSettings>
+    <Certificates>
+      <Certificate name="Management" thumbprint="BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB" thumbprintAlgorithm="sha1" />
+      <Certificate name="SSLCert" thumbprint="AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" thumbprintAlgorithm="sha1" />
+    </Certificates>
+  </Role>
+</ServiceConfiguration>

@@ -1,0 +1,62 @@
+﻿@model ReverseProxy.PaginatedList<ReverseProxy.Models.LogModel>
+
+@{
+    var title = String.Format("{0} {1} {2}", ViewBag.Location, ViewBag.Service, "Log");
+    ViewBag.Title = title;
+}
+
+<table>
+    <tr>
+        <th>
+            Instance
+        </th>
+        <th>
+            Message
+        </th>
+    </tr>
+
+    @foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.ActionLink(item.Instance.ToString(), "Details", new { id = item.Instance})
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Message)
+            </td>
+        </tr>
+    }
+    <div> 
+        Page @(Model.TotalPages < Model.PageIndex ? 0 : Model.PageIndex) 
+        of @Model.TotalPages 
+      
+        @if (Model.HasPreviousPage) 
+        { 
+            @Html.ActionLink("<<", "Index", new { page = 0 }) 
+            @Html.Raw(" "); 
+            @Html.ActionLink("< Prev", "Index", new { page = Model.PageIndex - 1 }) 
+        } 
+        else 
+        { 
+            @:<< 
+            @Html.Raw(" "); 
+            @:< Prev 
+        } 
+      
+        @if (Model.HasNextPage) 
+        { 
+            @Html.ActionLink("Next >", "Index", new { page = Model.PageIndex + 1}) 
+            @Html.Raw(" "); 
+            @Html.ActionLink(">>", "Index", new { page = Model.TotalPages}) 
+        } 
+        else 
+        { 
+            @:Next > 
+            @Html.Raw(" ") 
+            @:>> 
+        } 
+
+        @Html.ActionLink("Live", "Live")
+    </div>
+
+
+</table>
