@@ -1,4 +1,26 @@
-﻿// Copyright (c) Microsoft Corporation
+//-------------------------------------------------------------------------------------------------
+// <copyright company="Microsoft">
+//     Copyright (c) Microsoft Corporation.  All rights reserved.
+//
+//    Licensed under the Apache License, Version 2.0 (the "License");
+//    you may not use this file except in compliance with the License.
+//    You may obtain a copy of the License at
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+// THIS CODE IS PROVIDED *AS IS* BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, 
+// EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION ANY IMPLIED WARRANTIES OR 
+// CONDITIONS OF TITLE, FITNESS FOR A PARTICULAR PURPOSE, MERCHANTABLITY OR NON-INFRINGEMENT.
+//
+// See the Apache Version 2.0 License for specific language governing 
+// permissions and limitations under the License.
+// </copyright>
+//
+// <summary>
+// 
+//
+//     
+// </summary>
+//-------------------------------------------------------------------------------------------------
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -55,7 +77,7 @@ namespace ReverseProxy
 
         private IEnumerable<Task> _executeAsync(TaskCompletionSource<HttpStatusCode> tcs, int instance, Proposal<string, SerialilzableWebRequest> proposal)
         {
-            Action<string> trace = s => FUSE.Paxos.Events.TraceInfo(s, proposal.guid, _paxos.Self, instance);
+            Action<string> trace = s => FUSE.Paxos.Events.TraceInfo(s, proposal.guid, _paxos.Self, instance, proposal.value.Headers["x-ms-client-request-id"] ?? "");
             
             trace("ExecuteAsync Enter");
 
@@ -64,10 +86,21 @@ namespace ReverseProxy
 
             trace("ExecuteAsync ResponseReceived");
 
+            if (!proposal.value.Method.Equals("GET", StringComparison.InvariantCultureIgnoreCase))
+            {
             var logTask = Concurrency.RetryOnFaultOrCanceledAsync(() => LogResultAsync(instance), _ => true, 1000);
             yield return logTask;
 
+                try
+                {
+                    logTask.Wait();
             trace("ExecuteAsync Logged");
+                }
+                catch (Exception e)
+                {
+                    Validation.TraceException(e, "Exception incrementing LSN");
+                }                
+            }
 
             TaskCompletionSource<HttpWebResponse> completion;
             if (completions.TryGetValue(proposal.guid, out completion))
@@ -77,7 +110,7 @@ namespace ReverseProxy
             }
 
             tcs.SetResult(GetStatusCode(getResponseTask));
-            logTask.Wait();
+            
 
             trace("ExecuteAsync Exit");
         }
@@ -152,101 +185,6 @@ namespace ReverseProxy
             return Task.Factory.Iterate(_logOperation(instance));
         }
 
-        //public Task<HttpStatusCode> ExecuteAsync2(int instance, Proposal<string, SerialilzableWebRequest> proposal)
-        //{
-        //    using (new TimerScope("ProxyStateMachine.ExecuteAsync", instance, span_warn: new TimeSpan(0, 1, 0)))
-        //    {
-        //        Trace.Write(Tuple.Create(_paxos.Self, proposal.value.Path));
-        //        return Concurrency.Iterate<HttpStatusCode>(tcs => _executeAsync(tcs, instance, proposal));
-        //    }
-        //}
-
-        //private IEnumerable<Task> _executeAsync2(TaskCompletionSource<HttpStatusCode> tcs, int instance, Proposal<string, SerialilzableWebRequest> proposal)
-        //{
-        //    HttpStatusCode result = HttpStatusCode.Ambiguous;
-
-        //    Trace.TraceInformation("Enter _executeAsync: instance " + instance.ToString());
-
-        //    Task<HttpWebResponse> response;
-        //    while (true)
-        //    {
-        //        Trace.TraceInformation("Calling GetResponse _executeAsync: instance " + instance.ToString());
-        //        response = GetResponse(proposal.value);
-        //        yield return response;
-        //        Trace.TraceInformation("Completed GetResponse _executeAsync: instance " + instance.ToString());
-        //        if (response.Status == TaskStatus.RanToCompletion)
-        //        {
-        //            Trace.TraceInformation("RanToCompletion GetResponse _executeAsync: instance " + instance.ToString());
-        //            result = response.Result.StatusCode;
-        //            break;
-        //        }
-        //        else if (ShouldRetry(response.Exception))
-        //        {
-        //            Trace.TraceInformation("ShouldRetry GetResponse _executeAsync: instance " + instance.ToString());
-        //            yield return Task.Factory.StartNewDelayed(30 * 1000);
-        //            Trace.TraceInformation("DelayDone GetResponse _executeAsync: instance " + instance.ToString());
-        //            continue;
-        //        }
-        //        else
-        //        {
-        //            var httpErrors = Validation.HttpStatusCodes(response.Exception).ToArray();
-        //            if (httpErrors.Length > 0)
-        //            {
-        //                Trace.TraceInformation("HttpError GetResponse _executeAsync: instance " + instance.ToString());
-        //                result = httpErrors.First();
-        //                break;
-        //            }
-        //            else
-        //            {
-        //                continue;
-        //            }
-        //        }
-        //    }
-
-        //    Trace.TraceInformation("Notify Result _executeAsync: instance " + instance.ToString());
-        //    SignalR.GlobalHost.ConnectionManager.GetHubContext<LogHub>().Clients.addMessage(instance.ToString(), proposal.value.ToString());
-
-        //    Trace.TraceInformation("Log Result _executeAsync: instance " + instance.ToString());
-        //    var task = Task.Factory.Iterate(_logOperation(instance));
-        //    yield return task;
-        //    Trace.TraceInformation("Log Return _executeAsync: instance " + instance.ToString());
-        //    task.Wait();
-        //    Trace.TraceInformation("Log Succeeded _executeAsync: instance " + instance.ToString());
-
-        //    tcs.SetResult(result);
-        //    Trace.TraceInformation("TCS Result Set _executeAsync: instance " + instance.ToString());
-
-        //    TaskCompletionSource<HttpWebResponse> completion;
-        //    if (completions.TryGetValue(proposal.guid, out completion))
-        //    {
-        //        Trace.TraceInformation("Has Completion _executeAsync: instance " + instance.ToString());
-        //        completion.SetFromTask(response);
-        //        completions.Remove(proposal.guid);
-        //        Trace.TraceInformation("Completion Set _executeAsync: instance " + instance.ToString());
-        //    }
-        //    else
-        //    {
-        //        Trace.TraceInformation("Has No Completion _executeAsync: instance " + instance.ToString());
-        //    }
-
-
-        //}
-
-        //bool ShouldRetry(Exception e)
-        //{
-        //    var statusCodes = Validation.HttpStatusCodes(e).ToArray();
-        //    if (statusCodes.Length == 0)
-        //    {
-        //        return true;
-        //    }
-        //    else
-        //    {
-        //        return statusCodes.Contains(HttpStatusCode.ServiceUnavailable);
-        //    }
-        //}
-
-
-
         private IEnumerable<Task> _logOperation(int instance)
         {
             var container = cloudStorageAccount.CreateCloudBlobClient().GetContainerReference("root");
@@ -292,7 +230,6 @@ namespace ReverseProxy
             if (nodes.TryGetValue(location, out host))
             {
                 var preferedLeaders = RoleEnvironment.GetConfigurationSettingValue(serviceName + ".PreferedActiveMembers").Split(';');
-                //var resourceManaged = RoleEnvironment.GetConfigurationSettingValue(serviceName + ".ResourceManaged");
                 var localStorage = RoleEnvironment.GetLocalResource("LocalStorage").RootPath;
                 var storagePath = Path.Combine(localStorage, serviceName);
 
@@ -315,32 +252,10 @@ namespace ReverseProxy
                 var s2 = Utility.GetStorageAccount(true);
                 var container = s2.CreateCloudBlobClient().GetContainerReference("root");
                 container.CreateIfNotExist();
-                //var logPosition = container.GetBlobReference(serviceName + "LogPosition");
-
-                //var startAt = 0;
-                //try
-                //{
-                //    startAt = Int32.Parse(logPosition.DownloadText());
-                //}
-                //catch
-                //{
-                //}
-
-                //var lastTruncatedPosition = container.GetBlobReference(serviceName + "LastTruncatedPosition");
-
-                //var lastTruncated = 0;
-                //try
-                //{
-                //    lastTruncated = Int32.Parse(lastTruncatedPosition.DownloadText());
-                //}
-                //catch
-                //{
-                //}
 
                 Trace.Write("Remote Storage Loaded");
 
                 stateMachine = new ProxyStateMachine(location, nodes, mesh, storage, serviceName, preferedLeaders);
-                //stateMachine.StartAsync(startAt).Wait();
 
                 stateMachine.Paxos.WhenDiverged.Subscribe(d =>
                     {

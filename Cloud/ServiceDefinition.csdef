@@ -26,11 +26,11 @@
       <Setting name="Movies.PreferedActiveMembers" />
       <Setting name="Movies.PresentedAccount" />
       <Setting name="Movies.PresentedKey" />
-      <Setting name="MeshMutualAuthThumbprint" />
       <Setting name="Realm" />
       <Setting name="StorageAccountName" />
       <Setting name="StorageAccountKey" />
       <Setting name="Services" />
+      <Setting name="MeshMutualAuthThumbprint" />
     </ConfigurationSettings>
     <LocalResources>
       <LocalStorage cleanOnRoleRecycle="false" name="LocalStorage" sizeInMB="80000" />

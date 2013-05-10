@@ -96,9 +96,8 @@
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\packages\Newtonsoft.Json.4.5.8\lib\net40\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="ParallelExtensionsExtras, Version=1.2.0.0, Culture=neutral, PublicKeyToken=a3768d19e74c6624, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\vsprojects\parallel-extensions-extras-1.2\parallel-extensions-extras-master\bin\Debug\ParallelExtensionsExtras.dll</HintPath>
+    <Reference Include="ParallelExtensionsExtras">
+      <HintPath>ref\ParallelExtensionsExtras.dll</HintPath>
     </Reference>
     <Reference Include="SignalR">
       <HintPath>..\packages\SignalR.Server.0.5.2\lib\net40\SignalR.dll</HintPath>
