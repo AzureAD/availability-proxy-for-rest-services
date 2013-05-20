@@ -66,7 +66,7 @@ In order to build this demo application yourself, you will need to download:
 
 - [Windows Azure SDK](http://www.windowsazure.com/en-us/develop/downloads/ "Windows Azure SDK")
 - [Parallel Extension Extras](http://code.msdn.microsoft.com/ParExtSamples "Parallel Extensions Extras")
-- [Fuse Labs Paxos and Weld](http://download.Microsoft.com "Fuse Labs Paxos and Weld")
+- [Fuse Labs Paxos and Weld](http://www.microsoft.com/en-us/download/details.aspx?id=38796 "Fuse Labs Paxos and Weld")
 
 The build will look for these binaries in the ref directory.  You will need to adjust the references to the Azure SDK to match the version you have downloaded.
 
